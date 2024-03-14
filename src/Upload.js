@@ -9,9 +9,9 @@ const Upload = () => {
     const [purchaser_id, setPurchaserId] = useState(0);
     const [progress, setProgress] = useState({ started: false, pc: 0 });
     const [msg, setMsg] = useState(null)
-
+    
     function handleUpload() {
-        if (!file) {
+        /*if (!file) {
             console.log("No file selected");
             return;
         }
@@ -21,7 +21,7 @@ const Upload = () => {
         setMsg("Uploading...");
         setProgress(prevState => {
             return { ...prevState, started: true }
-        })
+        })*/
         /***** Testing the calling API */
 
         /*const axios = require('axios');*/
@@ -47,7 +47,7 @@ const Upload = () => {
 
         /***** end of testing */
 
-        axios.get(`http://localhost:6007/CreateClientInformation?vendor_id=${vendor_id}&purchaser_id=${purchaser_id}&template_id=${template_id}`, { vendor_id: vendor_id, template_id: template_id, purchaser_id: purchaser_id }, {
+        axios.get(`http://localhost:6009/ProcessInvoices?vendor_id=${vendor_id}`,{vendor_id:vendor_id}, {
             onUploadProgress: (progressEvent) => {
                 setProgress(prevState => {
                     return { ...prevState, pc: progressEvent.progress * 100 }
@@ -84,19 +84,13 @@ const Upload = () => {
         //   console.log(err)
         // });
     }
+    
 
     return (
         <div>
             <form>
-                <input min="1" max="100" placeholder="Vendor Id" onChange={(e) => { setVendorId(e.target.value) }} type="number" />
-                <br />
-                <input min="1" max="100" placeholder="Purchaser Id" onChange={(e) => { setTemplateId(e.target.value) }} type="number" />
-                <br />
-                <input min="1" max="10" placeholder="Template Id" onChange={(e) => { setPurchaserId(e.target.value) }} type="number" />
-                <br />
-                <input required onChange={(e) => { setFile(e.target.files[0]) }} type="file" />
-                <br />
-                <button onClick={handleUpload}>Upload</button>
+                
+                <button onClick={handleUpload}>Process Pending Invoices</button>
             </form>
             {progress.started && <progress max="100" value={progress.pc}></progress>}
             {msg && <span>{msg}</span>}
