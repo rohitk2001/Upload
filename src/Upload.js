@@ -9,7 +9,7 @@ const Upload = () => {
     const [purchaser_id, setPurchaserId] = useState(0);
     const [progress, setProgress] = useState({ started: false, pc: 0 });
     const [msg, setMsg] = useState(null)
-    
+
     function handleUpload() {
         /*if (!file) {
             console.log("No file selected");
@@ -47,7 +47,7 @@ const Upload = () => {
 
         /***** end of testing */
 
-        axios.get(`http://localhost:6009/ProcessInvoices?vendor_id=${vendor_id}`,{vendor_id:vendor_id}, {
+        axios.get(`http://localhost:6009/ProcessInvoices?vendor_id=${vendor_id}`, { vendor_id: vendor_id }, {
             onUploadProgress: (progressEvent) => {
                 setProgress(prevState => {
                     return { ...prevState, pc: progressEvent.progress * 100 }
@@ -84,12 +84,11 @@ const Upload = () => {
         //   console.log(err)
         // });
     }
-    
+
 
     return (
         <div>
             <form>
-                
                 <button onClick={handleUpload}>Process Pending Invoices</button>
             </form>
             {progress.started && <progress max="100" value={progress.pc}></progress>}
