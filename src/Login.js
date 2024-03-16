@@ -12,10 +12,7 @@ const LoginForm = () => {
 
     function submit() {
         axios.get(`http://localhost:6007/CreateClientInformation?UserName=${UserName}&Password=${Password}`, { UserName: UserName, Password: Password }, {
-            headers: {
-                "Custom-header": "value",
-
-            }
+            headers: { "Access-Control-Allow-Origin": "*" }
         })
             .then(res => {
                 setValid({ show: true, msg: "Uploaded Successfully" })
