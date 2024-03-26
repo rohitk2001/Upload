@@ -1,0 +1,24 @@
+.wrapper{
+    width:420px;
+    color:black;
+    border-top: 1px solid blue;
+    border-radius: 5px;
+    padding: 30px 40px;
+    background-color: white;
+}
+
+.wrapper button{
+    width: 340px;
+    height: 30px;
+    background: blue;
+    border:none;
+    outline:none;
+    border-radius:0px;
+    box-shadow: 0 0 10px rgba(0,0,0,.1);
+    padding:5px;
+    cursor:pointer;
+    font-size:16px;
+    color:white;
+    font-weight:700;
+    margin-top: 20px;
+}

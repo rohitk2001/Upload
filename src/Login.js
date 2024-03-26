@@ -3,25 +3,40 @@ import { useState } from "react";
 import './LoginForm.css';
 import { Link } from "react-router-dom";
 import axios from 'axios';
+import tally from './tally.png';
 
 
 const LoginForm = () => {
     const [UserName, setUsername] = useState("");
     const [Password, setPassword] = useState("");
     const [isValid, setValid] = useState({ show: "", msg: "" })
+    const [buttonText,setText] = useState("Validate Me")
 
     function submit() {
-        axios.get(`http://localhost:6007/CreateClientInformation?UserName=${UserName}&Password=${Password}`, { UserName: UserName, Password: Password }, {
-            headers: { "Access-Control-Allow-Origin": "*" }
-        })
-            .then(res => {
-                setValid({ show: true, msg: "Uploaded Successfully" })
-                console.log(res.data);
+        if(UserName == "" || Password == ""){
+            setValid({ show: null, msg: "Please enter the required fields"})
+        }else{
+            axios.get(`http://localhost:6007/CreateClientInformation?UserName=${UserName}&Password=${Password}`, { UserName: UserName, Password: Password }, {
+                headers: { "Access-Control-Allow-Origin": "*",
+                mode:"cors",
+            },
             })
-            .catch(err => {
-                setValid({ show: false, msg: "Uploading Failed" })
-                console.log(err)
-            });
+                .then(res => {
+                    if(res.data == "You are not a valid user"){
+                        setValid({ show: false, msg: res.data })
+                    }
+                    if(res.data == "You are a valid user"){
+                        setValid({ show: true, msg: res.data })
+                        setText("Click to Navigate")
+                    }
+                })
+                .catch(err => {
+                    // setValid({ show: false, msg: "Uploading Failed" })
+                    // console.log(err)
+                    setValid({ show: false, msg: "Please connect with system admin" })
+                    console.log(err);
+                });
+        }
     }
     let logInLink;
 
@@ -32,19 +47,23 @@ const LoginForm = () => {
     }
 
     return (
-        <div className='wrapper'>
-            <form>
-                <h3>User Registration</h3>
-                <div className='input-box'>
-                    <input type="text" placeholder="Username" required onChange={(e) => { setUsername(e.target.value) }} />
-                </div>
-                <div className='input-box'>
-                    <input type="password" placeholder="Password" required onChange={(e) => { setPassword(e.target.value) }} />
-                </div>
-                <Link to={logInLink}><button onClick={submit}>Validate Me</button></Link>
-            </form>
-            {isValid.show === false && alert("Login Failed")}
-            <h1>{isValid.msg}</h1>
+        <div>
+            <img src={tally}/>
+            <div className='wrapper'>
+                <form> 
+                    <h4 className='login-heading'>Login To Your Account</h4>
+                    <span className='input-box'>
+                        <label className='label-input'>Username</label>
+                        <input className='input-field' type="text" placeholder="Username" required onChange={(e) => { setUsername(e.target.value) }} />
+                    </span>
+                    <span className='input-box'>
+                        <label className='label-input-password'>Password</label>
+                        <input className='input-field' type="password" style={{ "marginTop": '10px' }} placeholder="Password" required onChange={(e) => { setPassword(e.target.value) }} />
+                    </span>
+                    <Link to={logInLink}><button onClick={submit}>{buttonText}</button></Link>
+                </form>
+                <h5>{isValid.msg}</h5>
+            </div>
         </div>
     );
 };
