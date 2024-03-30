@@ -14,7 +14,7 @@ import {
 function App() {
   return (
     <div className="App">
-      <Router>
+      <Router basename="/Upload">
         <Routes>
           <Route path="/" element={<LoginForm />} />
           <Route path="/tally" element={<Upload />} />
