@@ -9,8 +9,9 @@ import tally from './tally.png';
 const LoginForm = () => {
     const [UserName, setUsername] = useState("");
     const [Password, setPassword] = useState("");
-    const [isValid, setValid] = useState({ show: "", msg: "" })
-    const [buttonText,setText] = useState("Validate Me")
+    const [isValid, setValid] = useState({ show: "", msg: "" });
+    const [buttonText,setText] = useState("Validate Me");
+    const [showButton,setButton] = useState(false);
 
     function submit() {
         if(UserName == "" || Password == ""){
@@ -22,18 +23,22 @@ const LoginForm = () => {
             },
             })
                 .then(res => {
-                    if(res.data == "You are not a valid user"){
-                        setValid({ show: false, msg: res.data })
+                    console.log(res.data)
+                    if(res.data.Code !== '200' && res.data.Code !== '156'){
+                        setValid({ show: false, msg: res.data.Code+" :"+res.data.Message })
+                        setButton(false)
                     }
-                    if(res.data == "You are a valid user"){
-                        setValid({ show: true, msg: res.data })
-                        setText("Click to Navigate")
+                    if(res.data.Code === '200' || res.data.Code === '156'){
+                        setValid({ show: true, msg: res.data.Code+" :"+res.data.Message })
+                        //setText("Click to Navigate")
+                        setButton(true)
                     }
                 })
                 .catch(err => {
                     // setValid({ show: false, msg: "Uploading Failed" })
                     // console.log(err)
                     setValid({ show: false, msg: "Please connect with system admin" })
+                    setButton(false)
                     console.log(err);
                 });
         }
@@ -60,7 +65,8 @@ const LoginForm = () => {
                         <label className='label-input-password'>Password</label>
                         <input className='input-field' type="password" style={{ "marginTop": '10px' }} placeholder="Password" required onChange={(e) => { setPassword(e.target.value) }} />
                     </span>
-                    <Link to={logInLink}><button onClick={submit}>{buttonText}</button></Link>
+                    {showButton == false && <Link to={logInLink}><button onClick={submit}>Validate me</button></Link>}
+                    {showButton == true && <Link to={logInLink}><button>Click to Navigate</button></Link>}
                 </form>
                 <h5>{isValid.msg}</h5>
             </div>

@@ -18,11 +18,11 @@ const Upload = () => {
             }
         })
             .then(res => {
-                setMsg(res.data);
+                setMsg(res.data.Message+" :"+res.data.Code);
                 console.log(res.data);
             })
             .catch(err => {
-                setMsg(err.data);
+                setMsg("Please connect with system admin!")
                 console.log(err)
             });
 
