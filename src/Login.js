@@ -24,13 +24,15 @@ const LoginForm = () => {
             })
                 .then(res => {
                     console.log(res.data)
-                    if(res.data.Code !== '200' && res.data.Code !== '156'){
-                        setValid({ show: false, msg: res.data.Code+" :"+res.data.Message })
-                        setButton(false)
+                      
+                    if(res.data.Code !== '200' && res.data.Code !== '156' && res.data.Code !== '154'){
+                        setValid({ show: true, msg: res.data.Code+" :"+res.data.Message })
+                        setButton(true)
                     }
-                    if(res.data.Code === '200' || res.data.Code === '156'){
+                    if(res.data.Code === '200' || res.data.Code === '156'|| res.data.Code === '154'){
                         setValid({ show: true, msg: res.data.Code+" :"+res.data.Message })
                         //setText("Click to Navigate")
+                        
                         setButton(true)
                     }
                 })

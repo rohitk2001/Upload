@@ -1,41 +1,67 @@
 import React from 'react';
-import axios from 'axios';
 import { useState } from "react";
+import './Upload.css';
+import axios from 'axios';
 import tally from './tally.png';
 
+
 const Upload = () => {
-    const [file, setFile] = useState(null);
-    const [vendor_id, setVendorId] = useState(0);
-    const [template_id, setTemplateId] = useState(0);
-    const [purchaser_id, setPurchaserId] = useState(0);
+    const [UserName, setUsername] = useState("");
+    const [Password, setPassword] = useState("");
+    const [isValid, setValid] = useState({ show: "", msg: "" });
+    const [buttonText,setText] = useState("Validate Me");
+    const [showButton,setButton] = useState(false);
     const [msg, setMsg] = useState(null)
 
     function handleUpload() {
-        axios.get(`http://localhost:6009/ProcessInvoices?vendor_id=${vendor_id}`, { vendor_id: vendor_id }, {
-            headers: {
-                "Custom-header": "value",
-
-            }
-        })
-            .then(res => {
-                setMsg(res.data.Message+" :"+res.data.Code);
-                console.log(res.data);
+        
+            axios.get(`http://localhost:6009/ProcessInvoices?UserName=${UserName}&Password=${Password}`, { UserName: UserName, Password: Password }, {
+                headers: { "Access-Control-Allow-Origin": "*",
+                mode:"cors",
+            },
             })
-            .catch(err => {
-                setMsg("Please connect with system admin!")
-                console.log(err)
-            });
-
+                .then(res => {
+                    console.log(res.data)
+                    //setValid({ show: true, msg: res.data.InvoiceUploadID })
+                    setValid({ show: true, msg: "Your Invoices have been processed, please check the status in the https://tally.digisure.in/TallyIntegration/InvoiceDetailsWithStatus" })
+                
+                    /*if(res.data.Code !== '200' && res.data.Code !== '156' && res.data.Code !== '154'){
+                        //setValid({ show: false, msg: res.data.Code+" :"+res.data.Message })
+                        setButton(false)
+                    }
+                    if(res.data.Code === '200' || res.data.Code === '156'|| res.data.Code === '154'){
+                        setValid({ show: true, msg: res.data.Code+" :"+res.data.Message })
+                        //setText("Click to Navigate")
+                        setButton(true)
+                    }*/
+                })
+                .catch(err => {
+                    // setValid({ show: false, msg: "Uploading Failed" })
+                    // console.log(err)
+                    setValid({ show: false, msg: "Please connect with system admin" })
+                    setButton(false)
+                    console.log(err);
+                });
+    
+        
     }
+    /*let logInLink;
 
+    if (isValid.show) {
+        logInLink = "/tally";
+    } else {
+        logInLink = "/";
+    }*/
 
     return (
         <div>
             <img src={tally} />
             <div className='wrapper'>
-                <form>
+                
                     <button onClick={handleUpload}>Process Pending Invoices</button>
-                </form>
+
+                
+                <h5>{isValid.msg}</h5>
                 {msg && <span>{msg}</span>}
             </div>
         </div>
